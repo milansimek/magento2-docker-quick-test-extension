@@ -56,12 +56,9 @@ else
 fi
 
 if [[ ! -f /var/www/html/index.php ]]; then
-    tset xterm
-    bold=$(tput bold)
-    normal=$(tput sgr0)
-    green=$(tput setaf 3)
-    white=$(tput setaf 7)
-    echo "${bold}${green}Installing Magento 2 ## ${normal}${white}"
+    echo "####################################"
+    echo "###### Installing Magento 2 #######"
+    echo "####################################"
     service mysql start
     /install-magento2.sh ${MAGENTO_VERSION}
     service mysql stop
