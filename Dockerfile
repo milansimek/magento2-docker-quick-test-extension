@@ -31,10 +31,14 @@ RUN add-apt-repository -y ppa:ondrej/php && \
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C && \
   apt-get update && \
   apt-get -y upgrade && \
-  apt-get -y install supervisor nodejs npm wget git apache2 libapache2-mod-php${PHP_VERSION} mysql-server php${PHP_VERSION} php${PHP_VERSION}-mysql php${PHP_VERSION}-curl php${PHP_VERSION}-mcrypt php${PHP_VERSION}-intl php${PHP_VERSION}-mcrypt pwgen php${PHP_VERSION}-apc php${PHP_VERSION}-mcrypt php${PHP_VERSION}-gd php${PHP_VERSION}-xml php${PHP_VERSION}-mbstring php${PHP_VERSION}-gettext zip unzip php${PHP_VERSION}-zip  && \
+  apt-get -y install supervisor ssmtp wget git apache2 libapache2-mod-php${PHP_VERSION} mysql-server php${PHP_VERSION} php${PHP_VERSION}-mysql php${PHP_VERSION}-curl php${PHP_VERSION}-mcrypt php${PHP_VERSION}-intl php${PHP_VERSION}-mcrypt pwgen php${PHP_VERSION}-apc php${PHP_VERSION}-mcrypt php${PHP_VERSION}-gd php${PHP_VERSION}-xml php${PHP_VERSION}-mbstring php${PHP_VERSION}-gettext zip unzip php${PHP_VERSION}-zip  php${PHP_VERSION}-soap && \
   apt-get -y autoremove && \
   echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
+  curl -sL https://deb.nodesource.com/setup_8.x | bash && \
+  apt-get -y install nodejs && \
   npm install -g maildev
+
+RUN sed -i -e 's/\=mail/\=0\.0\.0\.0\:1025/g' /etc/ssmtp/ssmtp.conf
 
 # Update CLI PHP to use ${PHP_VERSION}
 RUN ln -sfn /usr/bin/php${PHP_VERSION} /etc/alternatives/php
@@ -74,10 +78,12 @@ RUN ln -s /var/www/phpMyAdmin-${PHPMYADMIN_VERSION}-all-languages /var/www/phpmy
 RUN mv /var/www/phpmyadmin/config.sample.inc.php /var/www/phpmyadmin/config.inc.php
 
 # Add composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php composer-setup.php && \
     php -r "unlink('composer-setup.php');" && \
     mv composer.phar /usr/local/bin/composer
+
 
 ENV MYSQL_PASS:-$(pwgen -s 12 1)
 # config to enable .htaccess

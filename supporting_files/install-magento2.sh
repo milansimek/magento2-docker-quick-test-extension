@@ -1,18 +1,20 @@
 #!/bin/bash
-set -o xtrace
 mkdir -p ~/.composer
 cp /auth.json ~/.composer/auth.json
+
 rm -Rf /var/www/html/*
 rm -Rf /var/www/html/.[^.]*
 cd /var/www/html
-mysql -uadmin -ppassword123 -e "create database magento"
+
+echo "creating database magento"
+mysql -uadmin -ppassword123 -e "create database magento" 2>&1 | grep -v "Warning: Using a password"
 if [ $@ ]; then
   composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:$1 . ;
 else
   composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition . ;
 fi
-chmod -Rf 777 ./* \
-&& php -f ./bin/magento setup:install --base-url=http://${BASE_URL}/ \
+
+php -f ./bin/magento setup:install --base-url=http://${BASE_URL}/ \
     --db-host=localhost \
     --db-name=magento \
     --db-user=admin \
@@ -28,6 +30,7 @@ chmod -Rf 777 ./* \
     --use-rewrites=1 \
     --backend-frontname=admin \
     --use-sample-data
+
 php -f ./bin/magento indexer:set-mode schedule \
 && cp /auth.json var/composer_home/auth.json \
 && php -f ./bin/magento sampledata:deploy \
@@ -35,4 +38,10 @@ php -f ./bin/magento indexer:set-mode schedule \
 && php -f ./bin/magento indexer:reindex \
 && php -f ./bin/magento cache:flush \
 && php -f ./bin/magento deploy:mode:set developer
-set +o xtrace
+
+echo "updating permissions for webserver"
+chmod -Rf 777 .
+chown -R www-data:staff .
+
+echo "enabling error reporting"
+sed -i -e 's/#ini_set/ini_set/g' app/bootstrap.php

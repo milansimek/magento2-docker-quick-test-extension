@@ -57,7 +57,7 @@ fi
 
 if [[ ! -f /var/www/html/index.php ]]; then
     echo "####################################"
-    echo "###### Installing Magento 2 #######"
+    echo "###### Installing Magento 2 ########"
     echo "####################################"
     service mysql start
     /install-magento2.sh ${MAGENTO_VERSION}
