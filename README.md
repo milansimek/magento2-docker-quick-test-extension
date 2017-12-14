@@ -2,7 +2,7 @@
 
 <hr>
 
-#### Apache 2.4 + PHP 5.6 / 7.0 / 7.1 / 7.2 + MySQL + MailDev + PhpMyAdmin
+#### Magento 2.0.x / 2.1.x / 2.2.x + Apache 2.4 + PHP 5.6 / 7.0 / 7.1 / 7.2 + MySQL + MailDev + PhpMyAdmin
 
 
 ## Usage
