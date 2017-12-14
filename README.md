@@ -47,14 +47,14 @@ Once the image starts up the extensions in the local `app/code` dir will be auto
 
 You can now test your extension at `local.dev:8080` (or your custom base url). 
    
-#### Available tools / resources
-##### MailDev virtual mailbox
+### Available tools / resources
+#### MailDev virtual mailbox
 Maildev virtual mailbox is available at `local.dev:1080`   
-##### PhpMyAdmin
+#### PhpMyAdmin
 PhpMyAdmin is available at `local.dev:8080/phpmyadmin`  
 user: `admin`  
 password: `password123`
-##### Magento admin panel
+#### Magento admin panel
 url: `local.dev/admin`   
 user: `admin`    
 password: `password123`
